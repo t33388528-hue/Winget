@@ -1,1 +1,1 @@
-winget install --id=LingitAS.Lingdys4 -e --accept-source-agreements --accept-package-agreements 
+$ProgressPreference = 'SilentlyContinue'; winget install --id=LingitAS.Lingdys4 -e --accept-source-agreements --accept-package-agreements 
