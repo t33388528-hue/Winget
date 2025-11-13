@@ -1,1 +1,1 @@
-winget install --id Microsoft.Teams -e --accept-source-agreements --accept-package-agreements 
+Write-Host "Uninstalling Teams..."; Get-AppxPackage *microsoftteams* | Remove-AppxPackage -AllUsers; Get-AppxProvisionedPackage -Online | Where DisplayName -like "*Teams*" | Remove-AppxProvisionedPackage -Online; Get-WmiObject Win32_Product | Where-Object {$_.Name -like "*Teams Machine-Wide Installer*"} | ForEach-Object {$_.Uninstall()}; Write-Host "Reinstalling Teams..."; winget install --id Microsoft.Teams -e --accept-source-agreements --accept-package-agreements 
