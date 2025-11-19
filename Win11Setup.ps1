@@ -40,3 +40,6 @@ $Installer.Updates = $UpdatesToDownload
 $InstallationResult = $Installer.Install()
 
 Write-Host "Installation Result: $($InstallationResult.ResultCode)"
+Write-Host "Restarting in 5 minutes."
+
+shutdown -r -t 300
