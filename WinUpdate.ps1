@@ -1,3 +1,5 @@
+Write-Host "Searching for Updates"
+
 # Create update session
 $UpdateSession = New-Object -ComObject Microsoft.Update.Session
 $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
