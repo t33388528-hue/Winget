@@ -15,15 +15,13 @@ $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 # Search for updates
 $SearchResult = $UpdateSearcher.Search("IsInstalled=0")
 
-Write-Host "Found $($SearchResult.Updates.Count) updates available:`n"
-
 # Print the names of all updates
 foreach ($update in $SearchResult.Updates) {
     Write-Host "- $($update.Title)"
 }
 
 # Prompt before installation
-Write-Host "`nStarting download and installation of updates..."
+Write-Host "`nStarting download and installation of $($SearchResult.Updates.Count) updates..."
 
 # Collect updates
 $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
