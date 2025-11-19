@@ -1,6 +1,9 @@
 Start-Process powershell "gpupdate /force"
 Start-Process powershell "iwr bit.ly/WinTeams|iex"
 Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'"
+if (-not (Test-Path "C:\Program Files (x86)\Lenovo\System Update\tvsu.exe")) {
+    cscript '\\ikt-drift01\PRODCON\ComputerJobs\Lenovo System update\v5.07.0110\Scripts\Lenovo System update.cis'
+}
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'"
 
 Write-Host "Searching for Windows Updates..."
@@ -12,25 +15,19 @@ $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 # Search for updates
 $SearchResult = $UpdateSearcher.Search("IsInstalled=0")
 
-# Filter only KB updates
-$KBUpdates = @()
+Write-Host "Found $($SearchResult.Updates.Count) updates available:`n"
+
+# Print the names of all updates
 foreach ($update in $SearchResult.Updates) {
-    if ($update.Title -match "KB\d+") {
-        $KBUpdates += $update
-        Write-Host "- $($update.Title)"
-    }
+    Write-Host "- $($update.Title)"
 }
 
-if ($KBUpdates.Count -eq 0) {
-    Write-Host "No updates found."
-    return
-}
+# Prompt before installation
+Write-Host "`nStarting download and installation of updates..."
 
-Write-Host "Starting download and installation of $($KBUpdates.Count) updates..."
-
-# Collect KB updates
+# Collect updates
 $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-foreach ($update in $KBUpdates) {
+foreach ($update in $SearchResult.Updates) {
     $UpdatesToDownload.Add($update) | Out-Null
 }
 
