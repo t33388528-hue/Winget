@@ -1,10 +1,7 @@
-Start-Process powershell "gpupdate /force"
-Start-Process powershell "iwr bit.ly/WinTeams|iex"
-Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'"
-if (-not (Test-Path "C:\Program Files (x86)\Lenovo\System Update\tvsu.exe")) {
-    cscript '\\ikt-drift01\PRODCON\ComputerJobs\Lenovo System update\v5.07.0110\Scripts\Lenovo System update.cis'
-}
-Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'"
+Start-Process powershell "gpupdate /force" -WindowStyle Minimized
+Start-Process powershell "iwr bit.ly/WinTeams|iex" -WindowStyle Minimized
+Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
+Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
 
 Write-Host "Searching for Windows Updates..."
 
@@ -21,7 +18,7 @@ foreach ($update in $SearchResult.Updates) {
 }
 
 # Prompt before installation
-Write-Host "`nStarting download and installation of $($SearchResult.Updates.Count) updates..."
+Write-Host "`nStarting download of $($SearchResult.Updates.Count) updates..."
 
 # Collect updates
 $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
