@@ -7,7 +7,7 @@ $failedDownloads = 0
 $failedInstalls = 0
 $retries = 0
 
-while (($failedDownloads -ne 0 -OR $failedInstalls -ne 0) - AND ($retries -lt 2)){
+while (($failedDownloads -ne 0 -OR $failedInstalls -ne 0) -AND $retries -lt 2){
 Write-Host "Searching for Windows Updates..."
 
 # Create update session
