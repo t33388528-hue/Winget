@@ -7,7 +7,8 @@ $failedDownloads = 0
 $failedInstalls = 0
 $retries = 0
 
-while (($failedDownloads -ne 0 -OR $failedInstalls -ne 0) -AND $retries -lt 3 -OR $retries -eq 0){
+while (($failedDownloads -ne 0 -OR $failedInstalls -ne 0) -AND $retries -lt 3 -OR $retries -lt 2){
+Write-Host "------------------------------------------------"
 Write-Host "Searching for Windows Updates..."
 
 # Create update session
@@ -20,6 +21,10 @@ $SearchResult = $UpdateSearcher.Search("IsInstalled=0")
 # Print the names of all updates
 foreach ($update in $SearchResult.Updates) {
     Write-Host "- $($update.Title)"
+}
+
+if ($SearchResult.Updates.Count -eq 0){
+break
 }
 
 Write-Host "`nStarting download of $($SearchResult.Updates.Count) updates..."
