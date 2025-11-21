@@ -34,7 +34,7 @@ $Downloader.Updates = $UpdatesToDownload
 $DownloadResult = $Downloader.Download()
 
 # Count failed downloads
-$failedDownloads = 0
+$global:failedDownloads = 0
 for ($i = 0; $i -lt $DownloadResult.UpdateResult.Count; $i++) {
     if ($DownloadResult.UpdateResult.Item($i).ResultCode -ne 2) { # 2 = succeeded
         $failedDownloads++
@@ -50,7 +50,7 @@ $Installer.Updates = $UpdatesToDownload
 $InstallationResult = $Installer.Install()
 
 # Count failed installs
-$failedInstalls = 0
+$global:failedInstalls = 0
 for ($i = 0; $i -lt $InstallationResult.UpdateResult.Count; $i++) {
     if ($InstallationResult.UpdateResult.Item($i).ResultCode -ne 2) { # 2 = succeeded
         $failedInstalls++
