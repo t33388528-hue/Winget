@@ -24,6 +24,7 @@ foreach ($update in $SearchResult.Updates) {
 }
 
 if ($SearchResult.Updates.Count -eq 0){
+Write-Host "No Updates found."
 break
 }
 
