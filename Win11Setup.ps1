@@ -5,8 +5,9 @@ Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Up
 
 $failedDownloads = 0
 $failedInstalls = 0
+$retries = 0
 
-while ($failedDownloads -ne 0 -OR $failedInstalls -ne 0){
+while (($failedDownloads -ne 0 -OR $failedInstalls -ne 0) - AND $retries -lt 2){
 Write-Host "Searching for Windows Updates..."
 
 # Create update session
@@ -58,6 +59,7 @@ for ($i = 0; $i -lt $InstallationResult.UpdateResult.Count; $i++) {
     }
 }
 Write-Host "Failed installs: $failedInstalls"
+$global:retries++
 }
 
 Write-Host "Restarting in 5 minutes."
