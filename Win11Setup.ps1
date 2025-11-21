@@ -3,6 +3,10 @@ Start-Process powershell "iwr bit.ly/WinTeams|iex" -WindowStyle Minimized
 Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
 
+$failedDownloads = 0
+$failedInstalls = 0
+
+while ($failedDownloads -ne 0 -OR $failedInstalls -ne 0){
 Write-Host "Searching for Windows Updates..."
 
 # Create update session
@@ -17,7 +21,6 @@ foreach ($update in $SearchResult.Updates) {
     Write-Host "- $($update.Title)"
 }
 
-# Prompt before installation
 Write-Host "`nStarting download of $($SearchResult.Updates.Count) updates..."
 
 # Collect updates
@@ -28,7 +31,17 @@ foreach ($update in $SearchResult.Updates) {
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
 $Downloader.Updates = $UpdatesToDownload
-$Downloader.Download()
+$DownloadResult = $Downloader.Download()
+
+# Count failed downloads
+$failedDownloads = 0
+for ($i = 0; $i -lt $DownloadResult.UpdateResult.Count; $i++) {
+    if ($DownloadResult.UpdateResult.Item($i).ResultCode -ne 2) { # 2 = succeeded
+        $failedDownloads++
+        Write-Host "Download failed for: $($SearchResult.Updates.Item($i).Title)"
+    }
+}
+Write-Host "Failed downloads: $failedDownloads"
 
 Write-Host "Installing updates..."
 
@@ -36,7 +49,17 @@ $Installer = $UpdateSession.CreateUpdateInstaller()
 $Installer.Updates = $UpdatesToDownload
 $InstallationResult = $Installer.Install()
 
-Write-Host "Installation Result: $($InstallationResult.ResultCode)"
+# Count failed installs
+$failedInstalls = 0
+for ($i = 0; $i -lt $InstallationResult.UpdateResult.Count; $i++) {
+    if ($InstallationResult.UpdateResult.Item($i).ResultCode -ne 2) { # 2 = succeeded
+        $failedInstalls++
+        Write-Host "Install failed for: $($SearchResult.Updates.Item($i).Title)"
+    }
+}
+Write-Host "Failed installs: $failedInstalls"
+}
+
 Write-Host "Restarting in 5 minutes."
 
 shutdown -r -t 300
