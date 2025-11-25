@@ -51,13 +51,7 @@ Write-Host "Windows Updates completed."
 Start-Process tvsu.exe
 Start-Sleep -Seconds 15
 $myshell = New-Object -ComObject WScript.Shell
-$myshell.AppActivate("System Update")
-Start-Sleep -Seconds 2
-$myshell.SendKeys("{TAB}")
-Start-Sleep -Seconds 2
-$myshell.SendKeys("{TAB}")
-Start-Sleep -Seconds 2
-$myshell.SendKeys("{ENTER}")
+taskkill /IM tvsukernel.exe
 Start-Sleep -Seconds 2
 $myshell.SendKeys("N")
 Start-Sleep -Seconds 100
