@@ -70,7 +70,7 @@ Start-Sleep -Seconds 2
 $myshell.SendKeys("D")
 Start-Sleep -Seconds 2
 $myshell.SendKeys("{Enter}")
-shutdown -r -t 1200
+shutdown -r -t 600
 
 gpupdate /force
 
