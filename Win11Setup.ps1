@@ -46,7 +46,37 @@ $InstallationResult = $Installer.Install()
 $global:retries++
 }
 
-Write-Host "Restarting in 5 minutes."
+Write-Host "Windows Updates completed."
+
+Start-Process tvsu.exe
+Start-Sleep -Seconds 15
+$myshell = New-Object -ComObject WScript.Shell
+$myshell.AppActivate("System Update")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{TAB}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{TAB}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{ENTER}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("N")
+Start-Sleep -Seconds 100
+$myshell.SendKeys("{ENTER}")
+Start-Sleep -Seconds 10
+$myshell.SendKeys("{Right}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{Right}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{Right}")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("S")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("N")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("D")
+Start-Sleep -Seconds 2
+$myshell.SendKeys("{Enter}")
+shutdown -r -t 1200
+
 gpupdate /force
 
-shutdown -r -t 300
