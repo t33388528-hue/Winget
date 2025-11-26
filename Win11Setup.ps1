@@ -61,7 +61,7 @@ Start-Sleep -Seconds 200
 $myshell.AppActivate("System Update") 
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 5
-$wshell.SendKeys("^{TAB}")
+$myshell.SendKeys("^{TAB}")
 Start-Sleep -Seconds 5
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 5
