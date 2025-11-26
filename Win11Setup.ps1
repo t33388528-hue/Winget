@@ -49,27 +49,24 @@ $global:retries++
 
 Write-Host "Windows Updates completed."
 
+New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "MetricsEnabled" -Value "NO" -PropertyType String -Force | Out-Null
+New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "DisplayLicenseNotice" -Value "NO" -PropertyType String -Force | Out-Null
+Start-Sleep -Seconds 5
 Start-Process tvsu.exe
-Start-Sleep -Seconds 30
 $myshell = New-Object -ComObject WScript.Shell
-taskkill /IM tvsukernel.exe
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 30
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 100
-$myshell.SendKeys("{ENTER}")
-Start-Sleep -Seconds 10
-$myshell.SendKeys("{Right}")
-Start-Sleep -Seconds 2
-$myshell.SendKeys("{Right}")
-Start-Sleep -Seconds 2
-$myshell.SendKeys("{Right}")
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 200
 $myshell.SendKeys("S")
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 5
+$wshell.SendKeys("^{TAB}")
+Start-Sleep -Seconds 5
+$myshell.SendKeys("S")
+Start-Sleep -Seconds 5
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 5
 $myshell.SendKeys("D")
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 5
 $myshell.SendKeys("{Enter}")
 shutdown -r -t 600
 
