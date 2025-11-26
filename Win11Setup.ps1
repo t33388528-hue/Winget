@@ -55,8 +55,10 @@ Start-Sleep -Seconds 5
 Start-Process tvsu.exe
 $myshell = New-Object -ComObject WScript.Shell
 Start-Sleep -Seconds 30
+$myshell.AppActivate("System Update") 
 $myshell.SendKeys("N")
 Start-Sleep -Seconds 200
+$myshell.AppActivate("System Update") 
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 5
 $wshell.SendKeys("^{TAB}")
