@@ -50,7 +50,7 @@ $global:retries++
 Write-Host "Windows Updates completed."
 
 Start-Process tvsu.exe
-Start-Sleep -Seconds 15
+Start-Sleep -Seconds 30
 $myshell = New-Object -ComObject WScript.Shell
 taskkill /IM tvsukernel.exe
 Start-Sleep -Seconds 2
