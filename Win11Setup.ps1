@@ -31,7 +31,9 @@ Write-Host "`nStarting download of $($SearchResult.Updates.Count) updates..."
 # Collect updates
 $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
 foreach ($update in $SearchResult.Updates) {
+    if (-not ($update.isDownloaded)){
     $UpdatesToDownload.Add($update) | Out-Null
+    }
 }
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
