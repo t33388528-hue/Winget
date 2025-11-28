@@ -21,11 +21,6 @@ foreach ($update in $SearchResult.Updates) {
     Write-Host "- $($update.Title)"
 }
 
-if ($SearchResult.Updates.Count -eq 0){
-Write-Host "No Updates found."
-break
-}
-
 Write-Host "`nStarting download of $($SearchResult.Updates.Count) updates..."
 
 # Collect updates
@@ -34,6 +29,11 @@ foreach ($update in $SearchResult.Updates) {
     if (-not ($update.isDownloaded)){
     $UpdatesToDownload.Add($update) | Out-Null
     }
+}
+
+if ($UpdatesToDownload.Updates.Count -eq 0){
+Write-Host "No Updates found."
+break
 }
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
