@@ -30,7 +30,7 @@ foreach ($update in $SearchResult.Updates) {
     $UpdatesToDownload.Add($update) | Out-Null
 }
 
-Write-Host "`nStarting download of $($UpdatesToDownload.Updates.Count) updates..."
+Write-Host "`nStarting download of $($UpdatesToDownload.Updates.Count)/$($SearchResult.Updates) updates..."
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
 $Downloader.Updates = $UpdatesToDownload
