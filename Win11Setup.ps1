@@ -63,6 +63,10 @@ $myshell.SendKeys("^{TAB}")
 Start-Sleep -Seconds 5
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 5
+$myshell.SendKeys("^{TAB}")
+Start-Sleep -Seconds 5
+$myshell.SendKeys("S")
+Start-Sleep -Seconds 5
 $myshell.SendKeys("N")
 Start-Sleep -Seconds 5
 $myshell.SendKeys("D")
