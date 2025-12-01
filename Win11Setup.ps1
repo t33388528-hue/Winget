@@ -46,7 +46,7 @@ $global:retries++
 
 Write-Host "Windows Updates completed."
 
-#System update stuff (lemme know when this actually works reliably)
+#System update stuff (does 100% of the updates, 50% of the time)
 New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "MetricsEnabled" -Value "NO" -PropertyType String -Force | Out-Null
 New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "DisplayLicenseNotice" -Value "NO" -PropertyType String -Force | Out-Null
 Start-Sleep -Seconds 5
@@ -69,7 +69,6 @@ Start-Sleep -Seconds 5
 $myshell.SendKeys("D")
 Start-Sleep -Seconds 5
 $myshell.SendKeys("{Enter}")
-shutdown -r -t 600
 
 #Language stuff
 $TaskName = "TempLogonTask"
@@ -78,5 +77,6 @@ $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
 
+shutdown -r -t 600
 gpupdate /force
 
