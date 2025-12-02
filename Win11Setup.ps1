@@ -6,7 +6,7 @@ Start-Process powershell "DISM /Online /Add-Package /PackagePath:'\\hk-fil\felle
 #Windows Update stuff
 $retries = 0
 
-while ($retries -lt 3){
+while ($retries -lt 2){
 Write-Host "------------------------------------------------"
 Write-Host "Searching for Windows Updates..."
 
@@ -79,6 +79,13 @@ $TaskName = "TempLogonTask"
 $Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process intl.cpl; msg * 'Copy settings and reboot to apply language'; Set-WinUILanguageOverride nb-NO`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
+
+#Winupdate post reboot
+$TaskName = "TempStartupTask"
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; `$retries = 0; msg * 'Searching for Windows Updates...'; while (`$retries -lt 2){`$UpdateSession = New-Object -ComObject Microsoft.Update.Session;`$UpdateSearcher = `$UpdateSession.CreateUpdateSearcher();`$SearchResult = `$UpdateSearcher.Search('IsInstalled=0');foreach (`$update in `$SearchResult.Updates) {msg * '- `$(`$update.Title)'};if (`$SearchResult.Updates.Count -eq 0){msg * 'No more updates found.'; break;};`$UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl;foreach (`$update in `$SearchResult.Updates) {`$UpdatesToDownload.Add(`$update) | Out-Null};`$Downloader = `$UpdateSession.CreateUpdateDownloader();`$Downloader.Updates = `$UpdatesToDownload;`$DownloadResult = `$Downloader.Download();`$Installer = `$UpdateSession.CreateUpdateInstaller();`$Installer.Updates = `$UpdatesToDownload;`$InstallationResult = `$Installer.Install(); `$global:retries++}; msg * 'Windows Updates completed. Rebooting'; shutdown -r -t 10`""
+$Trigger = New-ScheduledTaskTrigger -AtStartup
+$Principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
 
 Start-Process powershell "iwr bit.ly/WinTeams|iex" -WindowStyle Minimized
