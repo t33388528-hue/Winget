@@ -46,6 +46,7 @@ $global:retries++
 Write-Host "Windows Updates completed."
 
 #System update stuff (does 100% of the updates, 50% of the time)
+taskkill /IM tvsukernel.exe /F
 New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "MetricsEnabled" -Value "NO" -PropertyType String -Force | Out-Null
 New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\LENOVO\System Update\Preferences\UserSettings\General" -Name "DisplayLicenseNotice" -Value "NO" -PropertyType String -Force | Out-Null
 Start-Sleep -Seconds 5
