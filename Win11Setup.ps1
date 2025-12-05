@@ -45,7 +45,11 @@ $global:retries++
 Write-Host "Windows Updates completed."
 
 #Delay cus of winupdate crash i think
+if ($env:COMPUTERNAME[0] -eq "E"){
+Start-Process powershell "DISM /Online /Add-Package /PackagePath:'\\edu-fil01\brukere`$\iktadm\Microsoft-Windows-Client-Language-Pack_x64_nb-no.cab'" -WindowStyle Minimized
+}else{
 Start-Process powershell "DISM /Online /Add-Package /PackagePath:'\\hk-fil\felles\Personal\IKT\Microsoft-Windows-Client-Language-Pack_x64_nb-no.cab'" -WindowStyle Minimized
+}
 
 #System update stuff (does 100% of the updates, 50% of the time)
 taskkill /IM tvsukernel.exe /F
@@ -78,7 +82,7 @@ $myshell.SendKeys("{Enter}")
 
 #Language stuff
 $TaskName = "TempLogonTask"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; Start-Process intl.cpl; msg * 'Copy settings and reboot to apply language'; Set-WinUILanguageOverride nb-NO`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; msg * 'Copy settings and reboot to apply language'; Set-WinUILanguageOverride nb-NO`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
