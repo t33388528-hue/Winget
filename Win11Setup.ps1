@@ -68,7 +68,7 @@ Start-Sleep -Seconds 30
 $myshell.AppActivate("System Update") 
 Start-Sleep -Seconds 2
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 200
+Start-Sleep -Seconds 100
 $myshell.AppActivate("System Update") 
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 5
