@@ -101,6 +101,6 @@ $Principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccou
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
 
 Start-Process powershell "iwr bit.ly/WinTeams|iex" -WindowStyle Minimized
-shutdown -r -t 600
+shutdown -r -t 600 -c "Restarting in 10 minutes to apply updates."
 gpupdate /force
 
