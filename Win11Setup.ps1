@@ -80,7 +80,7 @@ Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Pr
 #Language stuff
 &{
 $TaskName = "Win11SetupPost"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Start-Process winver.exe; Remove-ItemProperty -Path $global:RegPath -Name 'AutoAdminLogon'; Set-ItemProperty -Path $global:RegPath -Name 'DefaultUsername' -Value ''; Remove-ItemProperty -Path $global:RegPath -Name 'DefaultPassword'; Set-WinUILanguageOverride nb-NO`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Start-Process winver.exe; Remove-ItemProperty -Path '$global:RegPath' -Name 'AutoAdminLogon'; Set-ItemProperty -Path '$global:RegPath' -Name 'DefaultUsername' -Value ''; Remove-ItemProperty -Path '$global:RegPath' -Name 'DefaultPassword'; Set-WinUILanguageOverride nb-NO`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
