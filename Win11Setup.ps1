@@ -1,3 +1,4 @@
+$Password = (Get-Credential).GetNetworkCredential().Password
 if ($env:COMPUTERNAME[0] -eq "E"){
 Start-Process powershell "cscript '\\capa-edu\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process "\\edu-fil01\brukere$\iktadm\system_update_5.08.03.59.exe" -ArgumentList "/VERYSILENT" -Wait
@@ -9,46 +10,20 @@ Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Up
 Start-Process powershell "Add-Type -AssemblyName System.Windows.Forms; while (`$true) {[System.Windows.Forms.SendKeys]::SendWait('{SCROLLLOCK}'); Start-Sleep -Seconds 59}" -WindowStyle Minimized
 
 #Windows Update stuff 
-$retries = 0
+irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUpdate.ps1|iex
 
-while ($retries -lt 2){
-Write-Host "------------------------------------------------"
-Write-Host "Searching for Windows Updates..."
+#Autologon
+$Username = $env:USERNAME
+$Domain   = $env:USERDOMAIN
 
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+$RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
-$SearchResult = $UpdateSearcher.Search("IsInstalled=0")
+Set-ItemProperty -Path $RegPath -Name "AutoAdminLogon" -Value "1"
+Set-ItemProperty -Path $RegPath -Name "DefaultUsername" -Value $Username
+Set-ItemProperty -Path $RegPath -Name "DefaultPassword" -Value $Password
+Set-ItemProperty -Path $RegPath -Name "DefaultDomainName" -Value $Domain
 
-foreach ($update in $SearchResult.Updates) {
-    Write-Host "- $($update.Title)"
-}
-
-if ($SearchResult.Updates.Count -eq 0){
-Write-Host "No Updates found."
-break
-}
-
-$UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-foreach ($update in $SearchResult.Updates) {
-    $UpdatesToDownload.Add($update) | Out-Null
-}
-
-$Downloader = $UpdateSession.CreateUpdateDownloader()
-$Downloader.Updates = $UpdatesToDownload
-Write-Host "`nStarting download of $($Downloader.Updates.Count)/$($SearchResult.Updates.Count) updates..."
-$DownloadResult = $Downloader.Download()
-
-Write-Host "Installing updates..."
-
-$Installer = $UpdateSession.CreateUpdateInstaller()
-$Installer.Updates = $UpdatesToDownload
-$InstallationResult = $Installer.Install()
-
-$global:retries++
-}
-
-Write-Host "Windows Updates completed."
+Write-Host "Autologon activated, do not cancel this script!"
 
 #Delay cus of winupdate crash i think
 if ($env:COMPUTERNAME[0] -eq "E"){
@@ -86,25 +61,27 @@ $myshell.SendKeys("D")
 Start-Sleep -Seconds 5
 $myshell.SendKeys("{Enter}")
 
-#Language stuff
-&{
-$TaskName = "TempLogonTask"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Start-Process winver.exe; Set-WinUILanguageOverride nb-NO`""
-$Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
-$Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
-Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
-}
-
 #Winupdate post reboot
 &{
-$TaskName = "TempLogonTask2"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"try{schtasks /Delete /TN $TaskName /F; `$retries = 0; Write-Host 'Searching for Windows Updates...'; while (`$retries -lt 2){`$UpdateSession = New-Object -ComObject Microsoft.Update.Session;`$UpdateSearcher = `$UpdateSession.CreateUpdateSearcher(); `$SearchResult = `$UpdateSearcher.Search('IsInstalled=0'); foreach (`$update in `$SearchResult.Updates) {Write-Host '-' + `$update.Title};if (`$SearchResult.Updates.Count -eq 0){msg * 'No more updates found.'; break;};`$UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl;foreach (`$update in `$SearchResult.Updates) {`$UpdatesToDownload.Add(`$update) | Out-Null};`$Downloader = `$UpdateSession.CreateUpdateDownloader();`$Downloader.Updates = `$UpdatesToDownload;`$DownloadResult = `$Downloader.Download();`$Installer = `$UpdateSession.CreateUpdateInstaller();`$Installer.Updates = `$UpdatesToDownload;`$InstallationResult = `$Installer.Install(); `$global:retries++}; msg * 'Windows Updates completed.'; shutdown -r -t 120 }catch{msg * '`$(`$_.Exception.Message)'}`""
+$str = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUpdate.ps1
+$TaskName = "Win11SetupReboot"
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"schtasks /Delete /TN $TaskName /F; msg * 'Autologon is still running, do not cancel this script!'; Enable-ScheduledTask -TaskName 'Win11SetupPost'; $str; shutdown -r -t 10`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
 }
 
-Start-Process powershell "iwr bit.ly/WinTeams|iex" -WindowStyle Minimized
+#Language stuff
+&{
+$TaskName = "Win11SetupPost"
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Start-Process winver.exe; Remove-ItemProperty -Path $RegPath -Name 'AutoAdminLogon'; Set-ItemProperty -Path $RegPath -Name 'DefaultUsername' -Value ''; Remove-ItemProperty -Path $RegPath -Name 'DefaultPassword'; Set-WinUILanguageOverride nb-NO`""
+$Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
+$Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
+Disable-ScheduledTask -TaskName $TaskName
+}
+
+Start-Process powershell "irm bit.ly/WinTeams|iex" -WindowStyle Minimized
 shutdown -r -t 600 -c "Restarting in 10 minutes to apply updates."
 gpupdate /force
 
