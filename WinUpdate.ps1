@@ -10,7 +10,7 @@ $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 $SearchResult = $UpdateSearcher.Search('IsInstalled=0')
 
 foreach ($update in $SearchResult.Updates) {
-    Write-Host '- $($update.Title)'
+    Write-Host '-' + $update.Title
 }
 
 if ($SearchResult.Updates.Count -eq 0){
