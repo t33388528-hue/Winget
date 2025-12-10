@@ -1,20 +1,20 @@
 $retries = 0
 
 while ($retries -lt 2){
-Write-Host "------------------------------------------------"
-Write-Host "Searching for Windows Updates..."
+Write-Host '------------------------------------------------'
+Write-Host 'Searching for Windows Updates...'
 
 $UpdateSession = New-Object -ComObject Microsoft.Update.Session
 $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 
-$SearchResult = $UpdateSearcher.Search("IsInstalled=0")
+$SearchResult = $UpdateSearcher.Search('IsInstalled=0')
 
 foreach ($update in $SearchResult.Updates) {
-    Write-Host "- $($update.Title)"
+    Write-Host '- $($update.Title)'
 }
 
 if ($SearchResult.Updates.Count -eq 0){
-Write-Host "No Updates found."
+Write-Host 'No Updates found.'
 break
 }
 
@@ -25,10 +25,10 @@ foreach ($update in $SearchResult.Updates) {
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
 $Downloader.Updates = $UpdatesToDownload
-Write-Host "`nStarting download of $($Downloader.Updates.Count)/$($SearchResult.Updates.Count) updates..."
+Write-Host '`nStarting download of $($Downloader.Updates.Count)/$($SearchResult.Updates.Count) updates...'
 $DownloadResult = $Downloader.Download()
 
-Write-Host "Installing updates..."
+Write-Host 'Installing updates...'
 
 $Installer = $UpdateSession.CreateUpdateInstaller()
 $Installer.Updates = $UpdatesToDownload
@@ -37,4 +37,4 @@ $InstallationResult = $Installer.Install()
 $global:retries++
 }
 
-Write-Host "Windows Updates completed."
+Write-Host 'Windows Updates completed.'
