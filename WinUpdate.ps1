@@ -10,7 +10,8 @@ $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
 $SearchResult = $UpdateSearcher.Search('IsInstalled=0')
 
 foreach ($update in $SearchResult.Updates) {
-    Write-Host $update.Title
+    $str = '- {0}' -f $update.Title
+    Write-Host $str
 }
 
 if ($SearchResult.Updates.Count -eq 0){
@@ -25,7 +26,8 @@ foreach ($update in $SearchResult.Updates) {
 
 $Downloader = $UpdateSession.CreateUpdateDownloader()
 $Downloader.Updates = $UpdatesToDownload
-Write-Host 'Starting download of ' + $($Downloader.Updates.Count) + ' updates...'
+$DownloadString = 'Starting download of {0} updates...' -f $Downloader.Updates.Count
+Write-Host $DownloadString
 $DownloadResult = $Downloader.Download()
 
 Write-Host 'Installing updates...'
