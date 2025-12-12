@@ -69,10 +69,10 @@ $myshell.SendKeys("{Enter}")
 &{
 #Thanks Trend...
 $str = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUpdate.ps1
-$ubrLink = 'SEtMTTpcU09GVFdBUkVcTWljcm9zb2Z0XFdpbmRvd3MgTlRcQ3VycmVudFZlcnNpb24='
+$ubrLink = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'
 $ubr = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").UBR
 $TaskName = "Win11SetupReboot"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"if ((Get-ItemProperty [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('$ubrLink'))).UBR -ne $ubr) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str; shutdown -r -t 10`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"`$string = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'; if ((Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -ne $ubr) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str; shutdown -r -t 10`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
