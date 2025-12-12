@@ -68,8 +68,9 @@ $myshell.SendKeys("{Enter}")
 #Winupdate post reboot
 &{
 $str = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUpdate.ps1
+$ubr = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").UBR
 $TaskName = "Win11SetupReboot"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"schtasks /Delete /TN $TaskName /F; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; Enable-ScheduledTask -TaskName 'Win11SetupPost'; Start-Process powershell `"Add-Type -AssemblyName System.Windows.Forms; while (`$true) {[System.Windows.Forms.SendKeys]::SendWait('{SCROLLLOCK}'); Start-Sleep -Seconds 59}`" -WindowStyle Minimized; $str; shutdown -r -t 10`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"if (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').UBR -ne $ubr) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; Start-Process powershell `"Add-Type -AssemblyName System.Windows.Forms; while (`$true) {[System.Windows.Forms.SendKeys]::SendWait('{SCROLLLOCK}'); Start-Sleep -Seconds 59}`" -WindowStyle Minimized; $str; shutdown -r -t 10`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
