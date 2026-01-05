@@ -12,6 +12,14 @@ Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Up
 }else{
 Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
+
+#PC name logging
+$text = Get-Date
+$content = Get-Content "\\hk-fil\felles\Personal\IKT\pcer.txt" -Raw
+"$text`n$content" | Set-Content "\\hk-fil\felles\Personal\IKT\pcer.txt"
+$text = $env:COMPUTERNAME
+$content = Get-Content "\\hk-fil\felles\Personal\IKT\pcer.txt" -Raw
+"$text`n$content" | Set-Content "\\hk-fil\felles\Personal\IKT\pcer.txt"
 }
 Start-Process powershell "Add-Type -AssemblyName System.Windows.Forms; while (`$true) {[System.Windows.Forms.SendKeys]::SendWait('{SCROLLLOCK}'); Start-Sleep -Seconds 59}" -WindowStyle Minimized
 
