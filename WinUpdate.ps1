@@ -1,6 +1,6 @@
 $retries = 0
 
-while ($retries -lt 2){
+while ($retries -lt 1){
 Write-Host '------------------------------------------------'
 Write-Host 'Searching for Windows Updates...'
 
