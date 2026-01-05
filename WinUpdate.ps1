@@ -28,6 +28,8 @@ $Downloader = $UpdateSession.CreateUpdateDownloader()
 $Downloader.Updates = $UpdatesToDownload
 $DownloadString = 'Starting download of {0} updates...' -f $Downloader.Updates.Count
 Write-Host $DownloadString
+$ComputerName = $env:COMPUTERNAME
+Write-Host $ComputerName
 $DownloadResult = $Downloader.Download()
 
 Write-Host 'Installing updates...'
