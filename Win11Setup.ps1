@@ -56,22 +56,22 @@ Start-Process tvsu.exe
 $myshell = New-Object -ComObject WScript.Shell
 Start-Sleep -Seconds 30
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 100
+Start-Sleep -Seconds 60
 $myshell.AppActivate("System Update") 
 $myshell.SendKeys("S")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("^{TAB}")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("S")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("^{TAB}")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("S")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("D")
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 2
 $myshell.SendKeys("{Enter}")
 
 #Winupdate post reboot
