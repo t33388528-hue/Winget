@@ -15,8 +15,12 @@ Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Up
 
 #PC name logging
 $text = $env:COMPUTERNAME
-$content = Get-Content "\\hk-fil\felles\Personal\IKT\pcer.txt" -Raw
-" & $text`n$content" | Set-Content "\\hk-fil\felles\Personal\IKT\pcer.txt"
+
+$content = Get-Content "\\hk-fil\felles\Personal\IKT\win11s_capa.txt" -Raw
+" $text`n$content" | Set-Content "\\hk-fil\felles\Personal\IKT\win11s_capa.txt"
+
+$content = Get-Content "\\hk-fil\felles\Personal\IKT\win11s_ad.txt" -Raw
+"$text;$content" | Set-Content "\\hk-fil\felles\Personal\IKT\win11s_ad.txt"
 }
 Start-Process powershell "Add-Type -AssemblyName System.Windows.Forms; while (`$true) {[System.Windows.Forms.SendKeys]::SendWait('{SCROLLLOCK}'); Start-Sleep -Seconds 59}" -WindowStyle Minimized
 
