@@ -1,9 +1,9 @@
-#Getting pw for autologon
-$Password = (Get-Credential).GetNetworkCredential().Password
-Write-Host "Password = $Password | Abort: Ctrl+C, continuing in 10s..."
-Start-Sleep -Seconds 10
-clear
-
+function Dec($c,$p,$s){
+    $d=New-Object Security.Cryptography.Rfc2898DeriveBytes($p,$s,10000)
+    $A=[Security.Cryptography.Aes]::Create()
+    $A.Key=$d.GetBytes(32); $A.IV=$d.GetBytes(16)
+    [Text.Encoding]::UTF8.GetString($A.CreateDecryptor().TransformFinalBlock([Convert]::FromBase64String($c),0,([Convert]::FromBase64String($c)).Length))
+}
 #Starting background tasks
 if ($env:COMPUTERNAME[0] -eq "E"){
 Start-Process powershell "cscript '\\capa-edu\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
@@ -29,6 +29,7 @@ irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUp
 
 #Autologon
 $Username = $env:USERNAME
+$Password = Dec "AMk+S5T2/02esTU+UBacDG30Pu6oD0tKoZLR6r4v698=" "" ((Get-Content "\\hk-fil\felles\Personal\IKT\salt.txt") -split "," | ForEach-Object { [int]$_ })
 $Domain   = $env:USERDOMAIN
 
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
