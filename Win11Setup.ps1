@@ -29,15 +29,20 @@ irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUp
 
 #Autologon
 $Username = $env:USERNAME
-$Password = Dec "AMk+S5T2/02esTU+UBacDG30Pu6oD0tKoZLR6r4v698=" "" ((Get-Content "\\hk-fil\felles\Personal\IKT\salt.txt") -split "," | ForEach-Object { [int]$_ })
 $Domain   = $env:USERDOMAIN
 
 $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"
 
 Set-ItemProperty -Path $RegPath -Name "AutoAdminLogon" -Value "1"
 Set-ItemProperty -Path $RegPath -Name "DefaultUsername" -Value $Username
-Set-ItemProperty -Path $RegPath -Name "DefaultPassword" -Value $Password
 Set-ItemProperty -Path $RegPath -Name "DefaultDomainName" -Value $Domain
+if ($env:COMPUTERNAME[0] -eq "E"){
+$Password = Dec "0eATePounqbpg9fD7NP6Tw==" "" ((Get-Content "\\edu-fil01\brukere`$\iktadm\salt.txt") -split "," | ForEach-Object { [int]$_ })
+Set-ItemProperty -Path $RegPath -Name "DefaultPassword" -Value $Password
+}else{
+$Password = Dec "AMk+S5T2/02esTU+UBacDG30Pu6oD0tKoZLR6r4v698=" "" ((Get-Content "\\hk-fil\felles\Personal\IKT\salt.txt") -split "," | ForEach-Object { [int]$_ })
+Set-ItemProperty -Path $RegPath -Name "DefaultPassword" -Value $Password
+}
 
 Write-Host "Autologon activated, do not cancel this script!"
 
@@ -57,7 +62,7 @@ Start-Process tvsu.exe
 $myshell = New-Object -ComObject WScript.Shell
 Start-Sleep -Seconds 30
 $myshell.SendKeys("N")
-Start-Sleep -Seconds 60
+Start-Sleep -Seconds 75
 $myshell.AppActivate("System Update") 
 $myshell.SendKeys("S")
 Start-Sleep -Seconds 2
