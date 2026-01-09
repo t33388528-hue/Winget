@@ -6,19 +6,26 @@ clear
 
 #Starting background tasks
 if ($env:COMPUTERNAME[0] -eq "E"){
+#Elev
 Start-Process powershell "cscript '\\capa-edu\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process "\\edu-fil01\brukere$\iktadm\system_update_5.08.03.59.exe" -ArgumentList "/VERYSILENT" -Wait
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
+
+$text = $env:COMPUTERNAME
+
+$content = Get-Content "\\edu-fil01\brukere$\iktadm\win11s_capa.txt" -Raw
+" $text`n$content" | Set-Content "\\edu-fil01\brukere$\iktadm\win11s_capa.txt"
+$content = Get-Content "\\edu-fil01\brukere$\iktadm\win11s_ad.txt" -Raw
+"$text;$content" | Set-Content "\\edu-fil01\brukere$\iktadm\win11s_ad.txt"
 }else{
+#Ansatt
 Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
 
-#PC name logging
 $text = $env:COMPUTERNAME
 
 $content = Get-Content "\\hk-fil\felles\Personal\IKT\win11s_capa.txt" -Raw
 " $text`n$content" | Set-Content "\\hk-fil\felles\Personal\IKT\win11s_capa.txt"
-
 $content = Get-Content "\\hk-fil\felles\Personal\IKT\win11s_ad.txt" -Raw
 "$text;$content" | Set-Content "\\hk-fil\felles\Personal\IKT\win11s_ad.txt"
 }
