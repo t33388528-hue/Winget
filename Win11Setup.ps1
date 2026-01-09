@@ -78,10 +78,11 @@ $myshell.SendKeys("{Enter}")
 &{
 #Thanks Trend...
 $str = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/WinUpdate.ps1
+$str2 = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/ActiveScreen.ps1
 $ubrLink = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'
 $ubr = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").UBR
 $TaskName = "Win11SetupReboot"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"`$string = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'; if ((Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -ne $ubr -or (Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -eq 7462) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str; gpupdate /force; shutdown -r -t 30;  Set-WinUILanguageOverride nb-NO`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"`$string = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'; if ((Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -ne $ubr -or (Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -eq 7462) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str2; $str; gpupdate /force; shutdown -r -t 30;  Set-WinUILanguageOverride nb-NO`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
@@ -89,8 +90,9 @@ Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Pr
 
 #Language stuff
 &{
+$str = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/main/ActiveScreen.ps1
 $TaskName = "Win11SetupPost"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Remove-ItemProperty -Path '$global:RegPath' -Name 'AutoAdminLogon'; Set-ItemProperty -Path '$global:RegPath' -Name 'DefaultUsername' -Value ''; Remove-ItemProperty -Path '$global:RegPath' -Name 'DefaultPassword'; Start-Sleep -Seconds 10; Start-Process winver.exe`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -WindowStyle Hidden -Command `"schtasks /Delete /TN $TaskName /F; Start-Process 'ms-settings:windowsupdate'; taskkill /IM tvsukernel.exe /F; Start-Process tvsu.exe; ; Start-Process intl.cpl; Remove-ItemProperty -Path '$global:RegPath' -Name 'AutoAdminLogon'; Set-ItemProperty -Path '$global:RegPath' -Name 'DefaultUsername' -Value ''; Remove-ItemProperty -Path '$global:RegPath' -Name 'DefaultPassword'; Start-Sleep -Seconds 10; Start-Process winver.exe; $str`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
