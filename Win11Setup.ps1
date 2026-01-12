@@ -15,6 +15,8 @@ Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Up
 Start-Process powershell "cscript '\\ikt-drift01\PRODCON\ComputerJobs\DameWare Mini Remote Control Service\v12.2.2.12\Scripts\DameWare Mini Remote Control Service.cis'" -WindowStyle Minimized
 Start-Process powershell "Start-Process 'C:\Program Files (x86)\Lenovo\System Update\tvsu.exe' '/CM /Install'" -WindowStyle Minimized
 
+Add-Printer -ConnectionName "\\gutenberg\SafeQ"
+
 $text = $env:COMPUTERNAME
 
 $content = Get-Content "\\hk-fil\felles\Personal\IKT\win11s_capa.txt" -Raw
