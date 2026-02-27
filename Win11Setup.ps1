@@ -85,7 +85,7 @@ $str2 = irm https://raw.githubusercontent.com/t33388528-hue/Winget/refs/heads/ma
 $ubrLink = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'
 $ubr = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").UBR
 $TaskName = "Win11SetupReboot"
-$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"`$string = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'; if ((Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -ne $ubr -or (Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -eq 7623) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str2; $str; gpupdate /force; shutdown -r -t 30;  Set-WinUILanguageOverride nb-NO`""
+$Action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -Command `"`$string = 'noisreVtnerruC\TN swodniW\tfosorciM\ERAWTFOS\:MLKH'; if ((Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -ne $ubr -or (Get-ItemProperty (-join `$string[-1..-(`$string.Length)])).UBR -eq 7840) {schtasks /Delete /TN $TaskName /F; Enable-ScheduledTask -TaskName 'Win11SetupPost'}; msg * 'Autologon is still running, do not cancel this script!'; Start-Sleep -Seconds 30; $str2; $str; gpupdate /force; shutdown -r -t 30;  Set-WinUILanguageOverride nb-NO`""
 $Trigger = New-ScheduledTaskTrigger -AtLogon -RandomDelay (New-TimeSpan -Seconds 10)
 $Principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
 Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $Trigger -Principal $Principal -Force
